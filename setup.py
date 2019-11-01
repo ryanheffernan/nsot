@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 from setuptools.command.develop import develop as DevelopCommand
 from setuptools.command.sdist import sdist as SDistCommand
-
+from wheel.bdist_wheel import bdist_wheel as BDistWheelCommand
 
 ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__)))
 
@@ -51,6 +51,12 @@ class SDistWithBuildStatic(SDistCommand):
     def run(self):
         self.run_command('build_static')
         SDistCommand.run(self)
+
+
+class BDistWheelWithBuildStatic(BDistWheelCommand):
+    def run(self):
+        self.run_command('build_static')
+        BDistWheelCommand.run(self)
 
 
 class BuildStatic(Command):
@@ -109,6 +115,7 @@ kwargs = {
         'build_static': BuildStatic,
         'develop': DevelopWithBuildStatic,
         'sdist': SDistWithBuildStatic,
+        'bdist_wheel': BDistWheelWithBuildStatic,
     },
     'entry_points': """
         [console_scripts]
